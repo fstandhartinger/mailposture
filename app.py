@@ -81,6 +81,15 @@ DISCLOSURE = (
     "no follow-up, and nothing you enter is stored. The check reads only public DNS."
 )
 
+# Self-hosted, cookieless Umami. The search string (which holds the domain you
+# check) is never sent, so the domain stays out of the statistics.
+ANALYTICS = ('<script defer src="https://bh-analytics.app.mintapis.com/script.js" '
+             'data-website-id="0ad1bb05-cbc2-454a-8e19-1ed261791338" data-domains="mailposture.app.mintapis.com" '
+             'data-exclude-search="true" data-do-not-track="true"></script>')
+ANALYTICS_NOTE = ("We use Umami, a self-hosted, cookieless analytics tool on servers in "
+                  "Germany; no personal data is stored, and the domain you check is never "
+                  "part of it.")
+
 # Findings that a recipient cannot reasonably argue with. spf-soft and
 # dkim-unknown are deliberately excluded: Google itself publishes ~all, and a
 # missing DKIM selector is not proof of an unsigned domain.
@@ -91,12 +100,14 @@ HARD = {"spf-missing", "spf-multiple", "spf-syntax", "spf-no-all", "spf-lookups"
 def page(body, title="Email authentication check"):
     return ("<!doctype html><html lang=en><head><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
-            f"<title>{html.escape(title)}</title><style>{STYLE}</style></head>"
+            f"<title>{html.escape(title)}</title><style>{STYLE}</style>"
+            f"{ANALYTICS}</head>"
             f"<body><div class=wrap>{body}"
             "<footer>" + html.escape(DISCLOSURE) +
             "<br><br>Sources: your domain's public DNS, read over DNS-over-HTTPS from "
             "Cloudflare and Google. Records are shown verbatim so you can re-run any "
             "query yourself &mdash; e.g. <code>dig +short TXT _dmarc.yourdomain.com</code>."
+            "<br><br>" + html.escape(ANALYTICS_NOTE) +
             "</footer></div></body></html>")
 
 
