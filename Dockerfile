@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY email_auth_dns.py app.py ./
+COPY email_auth_dns.py pages.py app.py ./
 
 ENV PORT=8080
 EXPOSE 8080
